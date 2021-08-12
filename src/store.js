@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import applyMixin from './mixin'
+=======
+import { reactive, computed, watch } from 'vue'
+import { storeKey } from './injectKey'
+>>>>>>> parent of c3a695e... fix: fix getters stop working when component is destroyed (#1884)
 import devtoolPlugin from './plugins/devtool'
 import ModuleCollection from './module/module-collection'
 import { forEachValue, isObject, isPromise, assert, partial } from './util'
@@ -286,14 +291,26 @@ function resetStoreVM (store, state, hot) {
   // reset local getters cache
   store._makeLocalGettersCache = Object.create(null)
   const wrappedGetters = store._wrappedGetters
+<<<<<<< HEAD
   const computed = {}
+=======
+  const computedObj = {}
+  const computedCache = {}
+>>>>>>> parent of c3a695e... fix: fix getters stop working when component is destroyed (#1884)
   forEachValue(wrappedGetters, (fn, key) => {
     // use computed to leverage its lazy-caching mechanism
     // direct inline function use will lead to closure preserving oldVm.
     // using partial to return function with only arguments preserved in closure environment.
+<<<<<<< HEAD
     computed[key] = partial(fn, store)
     Object.defineProperty(store.getters, key, {
       get: () => store._vm[key],
+=======
+    computedObj[key] = partial(fn, store)
+    computedCache[key] = computed(() => computedObj[key]())
+    Object.defineProperty(store.getters, key, {
+      get: () => computedCache[key].value,
+>>>>>>> parent of c3a695e... fix: fix getters stop working when component is destroyed (#1884)
       enumerable: true // for local getters
     })
   })
